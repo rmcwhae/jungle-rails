@@ -19,6 +19,7 @@ RSpec.describe User, type: :model do
       @user1 = User.create(first_name: 'Harry', last_name: 'Potter', password: 'test', password_confirmation: 'test', email: 'test@test.com')
       @user2 = User.new(first_name: 'Ron', last_name: 'Weasley', password: 'stuff', password_confirmation: 'stuff', email: 'TEST@TEST.com')
       expect(@user2).to_not be_valid
+      expect(@user2.errors.full_messages.first).to eq 'Email has already been taken'
     end
 
     it 'Email, first and last names must be provided' do
