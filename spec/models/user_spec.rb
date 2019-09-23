@@ -29,5 +29,11 @@ RSpec.describe User, type: :model do
       expect(@user.errors.full_messages.second).to eq "Last name can't be blank"
       expect(@user.errors.full_messages.third).to eq "Email can't be blank"
     end
+
+    it 'Password must be at least 4 characters' do
+      @user = User.new(first_name: 'Ron', last_name: 'Weasley', password: '123', password_confirmation: '123', email: 'TEST@TEST.com')
+      expect(@user).to_not be_valid
+      expect(@user.errors.full_messages.first).to eq 'Password is too short (minimum is 4 characters)'
+    end
   end
 end
