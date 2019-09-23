@@ -38,6 +38,48 @@ RSpec.describe User, type: :model do
   end
 
   describe '.authenticate_with_credentials' do
-    # examples for this class method here
+    before do
+      @user = User.create(first_name: 'Harry', last_name: 'Potter', password: 'test', password_confirmation: 'test', email: 'test@test.com')
+      expect(@user).to be_valid
+    end
+
+    it 'Logs in with correct info' do
+      @login_attempt = User.authenticate_with_credentials('test@test.com', 'test')
+      expect(@login_attempt.first_name).to eq 'Harry'
+      expect(@login_attempt.last_name).to eq 'Potter'
+    end
+
+    it 'Logs in with correct info, including spaces in email' do
+      @login_attempt = User.authenticate_with_credentials('   test@test.com ', 'test')
+      expect(@login_attempt.first_name).to eq 'Harry'
+      expect(@login_attempt.last_name).to eq 'Potter'
+    end
+
+    it 'Logs in with correct info, including wrong letter case in email' do
+      @login_attempt = User.authenticate_with_credentials('TEST@teST.coM', 'test')
+      expect(@login_attempt.first_name).to eq 'Harry'
+      expect(@login_attempt.last_name).to eq 'Potter'
+    end
+
+    it 'Fails to login with incorrect password' do
+      @login_attempt = User.authenticate_with_credentials('test@test.com', 'test2')
+      expect(@login_attempt).to be_nil
+    end
+
+    it 'Fails to login with nil password' do
+      @login_attempt = User.authenticate_with_credentials('test@test.com', nil)
+      expect(@login_attempt).to be_nil
+    end
+
+    it 'Fails to login with incorrect email address' do
+      @login_attempt = User.authenticate_with_credentials('test2@test.com', 'test')
+      expect(@login_attempt).to be_nil
+    end
+
+    it 'Fails to login with nil email address' do
+      @login_attempt = User.authenticate_with_credentials(nil, 'test')
+      expect(@login_attempt).to be_nil
+    end
+
   end
 end
