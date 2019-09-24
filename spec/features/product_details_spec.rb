@@ -23,10 +23,7 @@ RSpec.feature 'Visitor navigates to home page, then visits the first product pag
     visit root_path
     first('article.product img').click
 
-    # DEBUG
-    
     # VERIFY
     expect(page).to have_css 'article.product-detail'
-    save_screenshot
   end
 end
